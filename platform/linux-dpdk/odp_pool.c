@@ -310,6 +310,7 @@ odp_pool_t odp_pool_create(const char *name, odp_pool_param_t *params)
 	uint32_t max_len, min_align;
 	char pool_name[ODP_POOL_NAME_LEN];
 	char *rte_name = NULL;
+	struct rte_mempool_memhdr *hdr;
 #if RTE_MEMPOOL_CACHE_MAX_SIZE > 0
 	unsigned j;
 #endif
@@ -501,6 +502,11 @@ odp_pool_t odp_pool_create(const char *name, odp_pool_param_t *params)
 		pool_hdl = pool->s.pool_hdl;
 		break;
 	}
+
+	hdr = STAILQ_FIRST(&pool->s.rte_mempool->mem_list);
+	params->pool_start = (uint64_t) hdr->addr;
+	params->pool_end = (uint64_t) (params->pool_start + hdr->len);
+	params->pool_size = params->pool_end - params->pool_start;
 
 	return pool_hdl;
 }

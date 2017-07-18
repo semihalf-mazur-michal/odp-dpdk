@@ -165,6 +165,9 @@ int odp_pool_capability(odp_pool_capability_t *capa);
 typedef struct odp_pool_param_t {
 	/** Pool type */
 	int type;
+	uint64_t pool_start;
+	uint64_t pool_end;
+	uint64_t pool_size;
 
 	/** Variant parameters for different pool types */
 	union {
