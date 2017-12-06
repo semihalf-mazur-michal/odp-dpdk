@@ -136,12 +136,15 @@ static int auth_alg_odp_to_rte(odp_auth_alg_t auth_alg,
 		auth_xform->auth.digest_length = 12;
 		break;
 	case ODP_AUTH_ALG_SHA256_HMAC:
+		auth_xform->auth.algo = RTE_CRYPTO_AUTH_SHA256_HMAC;
+		auth_xform->auth.digest_length = 32;
+		break;
 #if ODP_DEPRECATED_API
 	case ODP_AUTH_ALG_SHA256_128:
-#endif
 		auth_xform->auth.algo = RTE_CRYPTO_AUTH_SHA256_HMAC;
 		auth_xform->auth.digest_length = 16;
 		break;
+#endif
 	case ODP_AUTH_ALG_SHA1_HMAC:
 		auth_xform->auth.algo = RTE_CRYPTO_AUTH_SHA1_HMAC;
 		auth_xform->auth.digest_length = 20;
