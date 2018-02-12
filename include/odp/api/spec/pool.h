@@ -281,6 +281,10 @@ odp_pool_t odp_pool_lookup(const char *name);
  * Used to get information about a pool.
  */
 typedef struct odp_pool_info_t {
+
+	uint64_t min_data_addr;
+	uint64_t max_data_addr;
+
 	const char *name;          /**< pool name */
 	odp_pool_param_t params;   /**< pool parameters */
 } odp_pool_info_t;

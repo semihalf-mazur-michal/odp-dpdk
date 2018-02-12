@@ -607,16 +607,22 @@ void odp_pool_print(odp_pool_t pool_hdl)
 	rte_mempool_dump(stdout, pool->s.rte_mempool);
 }
 
+
 int odp_pool_info(odp_pool_t pool_hdl, odp_pool_info_t *info)
 {
 	uint32_t pool_id = pool_handle_to_index(pool_hdl);
 	pool_entry_t *pool = get_pool_entry(pool_id);
+	struct rte_mempool_memhdr *hdr;
 
 	if (pool == NULL || info == NULL)
 		return -1;
 
 	info->name = pool->s.name;
 	info->params = pool->s.params;
+
+	hdr = STAILQ_FIRST(&pool->s.rte_mempool->mem_list);
+	info->min_data_addr = (uint64_t) hdr->addr;
+	info->max_data_addr = (uint64_t) hdr->addr + hdr->len - 1;
 
 	return 0;
 }
