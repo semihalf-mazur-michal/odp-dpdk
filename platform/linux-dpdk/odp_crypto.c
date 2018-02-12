@@ -42,6 +42,7 @@ struct crypto_session_entry_s {
 		} iv;
 		odp_queue_t compl_queue; /**< Async mode completion
 					      event queue */
+		odp_crypto_op_mode_t pref_mode;
 		odp_pool_t output_pool;  /**< Output buffer pool */
 };
 
@@ -917,6 +918,7 @@ int odp_crypto_session_create(odp_crypto_session_param_t *param,
 	entry->iv.length = param->iv.length;
 	entry->iv.data = param->iv.data;
 	entry->output_pool = param->output_pool;
+	entry->pref_mode = param->pref_mode;
 	entry->compl_queue = param->compl_queue;
 
 	/* We're happy */
@@ -1131,7 +1133,8 @@ int odp_crypto_operation(odp_crypto_op_param_t *param,
 	rte_crypto_op_free(op);
 
 	/* If specified during creation post event to completion queue */
-	if (ODP_QUEUE_INVALID != entry->compl_queue) {
+	if (ODP_QUEUE_INVALID != entry->compl_queue &&
+			entry->pref_mode == ODP_CRYPTO_ASYNC) {
 		odp_event_t completion_event;
 		odp_crypto_generic_op_result_t *op_result;
 
